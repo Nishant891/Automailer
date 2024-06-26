@@ -6,4 +6,5 @@ export interface User {
     access_token: string;
     refresh_token: string;
     expiry: number;
-}
+    most_recent_email: string;
+  }

@@ -3,6 +3,7 @@ import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
 import { router } from '../route/router'; 
+import { scheduler } from '../jobs/auto.check.emails';
 
 dotenv.config();
 
@@ -27,5 +28,6 @@ const PORT = 5000
 
 app.listen(PORT, "0.0.0.0", () => {
     console.log(`Server is running on port ${PORT}`);
+    //scheduler();
 });
 
