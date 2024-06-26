@@ -1,14 +1,15 @@
 import express from "express";
 import { OAuth2Client } from "google-auth-library";
 import("node-fetch");
+import fs from "fs";
 
 export const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.send("<h1>Hello! This is Alpha.</h1>");
+  res.send(`<h1>Server is online</h1><img src="https://i.pinimg.com/originals/28/8b/61/288b612b0a1481acc84c822458b056cb.gif"></img>`);
 });
 
-//You will need CLIENT_ID and CLIENT_SECRET see docs for info
+//You will need CLIENT_ID and CLIENT_SECRET see docs for more information
 router.post("/request", async (req, res, next) => {
   res.header("Access-Control-Allow-Origin", "http://127.0.0.1:3000");
   res.header("Access-Control-Allow-Credentials", "true");
@@ -33,6 +34,26 @@ router.post("/request", async (req, res, next) => {
   res.json({ url: authorizeUrl });
 });
 
+async function saveUser(user) {
+  fs.readFile("./files/db.json", "utf-8", (err, data) => {
+    if(err){
+      throw new Error;
+    }
+    try {
+      const existingUsers = JSON.parse(data);
+
+      existingUsers.push(user);
+
+      fs.writeFile("./files/db.json",JSON.stringify(existingUsers, null, 2), "utf-8", (err) => {
+        if(err){
+          throw new Error;
+        }
+      })
+    } catch (error) {
+      throw new Error;
+    }
+  })
+}
 
 router.get("/oauth", async (req, res, next) => {
   const code = req.query.code as string;
@@ -46,17 +67,21 @@ router.get("/oauth", async (req, res, next) => {
     const r = await oAuth2Client.getToken(code);
     // Make sure to set the credentials on the OAuth2 client.
     await oAuth2Client.setCredentials(r.tokens);
-    const user = oAuth2Client.credentials;
-    res.cookie("access_token", user.access_token, {
-      sameSite: "strict",
-    });
-    res.cookie("refresh_token", user.refresh_token, {
-      sameSite: "strict",
-    });
-    res.cookie("expires_in", user.expiry_date?.toString(), {
-      sameSite: "strict",
-    });
-
+    const data = oAuth2Client.credentials;
+    const user = await getUserData(data.access_token);
+    try {
+      await saveUser({
+        id: user.sub,
+        name: user.name,
+        email: user.email,
+        picture: user.picture,
+        access_token: data.access_token,
+        refresh_token: data.refresh_token,
+        expiry: data.expiry_date
+      });
+    } catch (error) {
+      res.redirect(303, "http://127.0.0.1:3000?error=OAuthError");
+    }
     // Redirect
     res.redirect(303, "http://127.0.0.1:3000");
   } catch (err) {

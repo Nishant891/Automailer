@@ -14,7 +14,6 @@ const EmailTable = ({
   setToggleEmailViewer,
   setEmailInView,
 }: EmailTableProps) => {
-
   //Whenever user clicks an email toggle the email view and set the emailInView that has the data of current email
   const handleEmailClick = (id: string) => {
     const currentEmail = emails.find((email) => {
@@ -68,12 +67,12 @@ const EmailTable = ({
                           </td>
                           <td className="w-1/6 px-6 py-4 text-sm text-gray-100 overflow-hidden">
                             {email.subject.length > 30
-                              ? `${email.subject.substring(0, 30)}...`
+                              ? `${email.subject.substring(0, 30)}` + "..."
                               : email.subject}
                           </td>
-                          <td className="w-2/6 px-6 py-4 text-sm text-gray-100 overflow-hidden">
+                          <td className="w-2/6 px-6 py-4 text-sm text-gray-100">
                             {email.message.length > 100
-                              ? `${email.message.substring(0, 100)}...`
+                              ? `${email.message.substring(0, 100)}` + ".."
                               : email.message}
                             <a
                               className="text-blue-500"
@@ -81,7 +80,20 @@ const EmailTable = ({
                               href={`https://mail.google.com/mail/u/0/#inbox/${email.id}`}
                             >
                               {" "}
-                              Link
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={1.5}
+                                stroke="currentColor"
+                                className="size-6"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25"
+                                />
+                              </svg>
                             </a>
                           </td>
                           <td className="w-1/6 px-6 py-4 text-sm text-gray-100 overflow-hidden">

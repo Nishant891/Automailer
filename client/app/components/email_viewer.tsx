@@ -13,14 +13,14 @@ const EmailViewer = ({
   setToggleEmailViewer,
 }: EmailViewerProps) => {
   return (
-    <div className="fixed right-0 w-1/2 h-full block overflow-y-scroll bg-gray-800 rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8">
+    <div className="fixed right-0 w-1/2 h-full block overflow-y-scroll bg-gray-900 rounded-lg border border-gray-100 p-4 sm:p-6 lg:p-8">
       <span className="absolute inset-x-0 bottom-0 h-2"></span>
 
       <button
         onClick={() => {
           setToggleEmailViewer(!toggleEmailViewer);
         }}
-        className="absolute top-2 left-2 rounded-full px-[1.2rem] py-[0.8rem] text-gray-50 text-center border border-gray-50"
+        className="absolute top-2 left-2 rounded-md px-[0.6rem] py-[0.2rem] text-gray-50 text-center border border-gray-50 bg-red-600"
       >
         X
       </button>
